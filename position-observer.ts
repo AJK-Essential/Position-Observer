@@ -27,7 +27,7 @@ export class PositionObserver {
     this.intersectionObserver = new IntersectionObserver(
       this.viewportCallback.bind(this),
       {
-        threshold: [0, 1],
+        threshold: this.thresholdList,
         rootMargin: "0px 0px 0px 0px",
       }
     );
@@ -113,7 +113,7 @@ export class PositionObserver {
       this.intersectionObserver = new IntersectionObserver(
         this.viewportCallback.bind(this),
         {
-          threshold: [0, 1],
+          threshold: this.thresholdList,
           rootMargin: "0px 0px 0px 0px",
         }
       );
