@@ -1,0 +1,33 @@
+{
+  "name": "position-observer",
+  "version": "1.0.0",
+  "description": "A way to observe position-change of an HTML Element without listening to scroll events or continuous polling.",
+  "main": "./dist/position-observer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --watch",
+    "start": "web-dev-server --root-dir ./demo --node-resolve --watch --open ",
+    "generate-notice": "node generate-notice.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AJK-Essential/Position-Observer.git"
+  },
+  "keywords": [
+    "position-observer",
+    "observer",
+    "ts",
+    "js"
+  ],
+  "author": "AJK-Essential",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AJK-Essential/Position-Observer/issues"
+  },
+  "homepage": "https://github.com/AJK-Essential/Position-Observer#readme",
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "@web/dev-server": "^0.4.5"
+  },
+  "private": true
+}
