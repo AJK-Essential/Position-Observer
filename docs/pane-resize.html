@@ -7,14 +7,16 @@
     margin: 0;
     padding: 0;
     position: relative;
+    background-color: rgba(0, 0, 0, 0.2);
   }
   .target {
     background-color: rgba(128, 0, 0, 0.361);
     width: 20px;
     height: 20px;
-    position: fixed;
     transition: all 0.2s ease-in-out;
     border-radius: 4px;
+    position: relative;
+    top: 30%;
   }
   .overlay {
     position: fixed;
@@ -38,40 +40,39 @@
     bottom: 0px;
     width: 100%;
   }
+  main {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    height: 100%;
+  }
+  aside {
+    width: 125px;
+    background: rgba(9, 231, 138, 0.2);
+    border-radius: 8px;
+  }
+  .range {
+    position: absolute;
+    bottom: 0%;
+    right: 0%;
+  }
 </style>
+<main>
+  <aside></aside>
+  <div class="target"></div>
+</main>
 
-<div class="target"></div>
 <div class="overlay">This overlay tracks the target</div>
+<input type="range" min="50" max="200" class="range" value="125" />
 <pre class="data"></pre>
 <script>
   const target = document.querySelector(".target");
   const overlay = document.querySelector(".overlay");
   const code = document.querySelector(".data");
-  setInterval(() => {
-    target.style.left = `${
-      Math.random() *
-        (window.visualViewport.offsetLeft +
-          window.visualViewport.width +
-          100 -
-          window.visualViewport.offsetLeft -
-          100) +
-      window.visualViewport.offsetLeft -
-      100
-    }px`;
-    target.style.top = `${
-      Math.random() *
-        (window.visualViewport.offsetTop +
-          window.visualViewport.height +
-          100 -
-          window.visualViewport.offsetTop -
-          100) +
-      window.visualViewport.offsetTop -
-      100
-    }px`;
-  }, 5000);
+  const pane = document.querySelector("aside");
+  const range = document.querySelector(".range");
 </script>
 <script type="module">
-  import { PositionObserver } from "../dist/position-observer.js";
+  import { PositionObserver } from "./position-observer.js";
 
   const positionObs = new PositionObserver(posObsCallback);
   positionObs.observe(target);
@@ -80,8 +81,11 @@
     overlay.style.top = data.y + target.getBoundingClientRect().height + "px";
     overlay.style.left = data.x + "px";
     code.innerHTML = `
-Data.x              =   ${data.x};
-Data.y              =   ${data.y};
-Data.outOfViewport  =   ${data.outOfViewport}`;
+    Data.x              =   ${data.x};
+    Data.y              =   ${data.y};
+    Data.outOfViewport  =   ${data.outOfViewport}`;
   }
+  range.oninput = () => {
+    pane.style.width = range.value + "px";
+  };
 </script>

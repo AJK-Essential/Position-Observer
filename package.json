@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --watch",
-    "start": "web-dev-server --root-dir ./demo --node-resolve --watch --open ",
+    "start": "web-dev-server --root-dir ./docs --node-resolve --watch --open ",
     "generate-notice": "node generate-notice.js"
   },
   "repository": {
