@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --watch",
-    "start": "web-dev-server --root-dir ./docs --node-resolve --watch --open ",
-    "generate-notice": "node generate-notice.js"
+    "demo:version-1": "web-dev-server --root-dir ./docs --node-resolve --watch --open ",
+    "demo:version-2": "web-dev-server --root-dir ./docs/version-2 --node-resolve --watch --open "
   },
   "repository": {
     "type": "git",
