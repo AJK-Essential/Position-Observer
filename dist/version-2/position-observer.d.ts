@@ -27,7 +27,6 @@ export declare class PositionObserver {
     private viewportWindowDetectionCallback;
     private hasPositionChanged;
     private updatePosition;
-    private repeatedCheck;
     private stopConfirmationCheck;
     private finerWindowCallback;
     disconnect(): void;

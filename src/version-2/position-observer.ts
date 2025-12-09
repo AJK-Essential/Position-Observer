@@ -28,7 +28,7 @@ export class PositionObserver {
   private target?: HTMLElement | Element;
   private timeToWaitTillStopConfirmed = 0;
   private waitTime = 0;
-  private stopWaitTime = 1000;
+  private stopWaitTime = 2 * 1000; // 2 times 1000ms = 2s
   private stopped = false;
   constructor(
     positionObserverCallback: positionObserverCallback,
@@ -111,50 +111,8 @@ export class PositionObserver {
     };
   }
 
-  private repeatedCheck() {
-    console.log("RAF called");
-    if (this.target) {
-      const targetRect = this.target.getBoundingClientRect();
-      if (this.hasPositionChanged(targetRect)) {
-        // if again the position has changed, then again reset the countdown
-        // and start counting down again.
-        this.updatePosition(targetRect);
-        this.positionObserverCallback({
-          x: targetRect.left,
-          y: targetRect.top,
-          target: this.target,
-          outOfViewport: false,
-          rootBounds: targetRect,
-        });
-        this.timeToWaitTillStopConfirmed = Math.ceil(this.waitTime / 16);
-        this.positionRAF = requestAnimationFrame(this.repeatedCheck.bind(this));
-      } else if (this.timeToWaitTillStopConfirmed !== 0) {
-        // this means the position seems to be stable and not moving... so
-        // decrement counter... who knows.. it may stop completely after some time..
-        --this.timeToWaitTillStopConfirmed;
-        this.positionRAF = requestAnimationFrame(this.repeatedCheck.bind(this));
-      } else {
-        // this means the target has neither changed position and timer has stopped.
-        // so it means it has stopped after waiting for that much time.
-        // now we pass the net to the bigger viewport window to catch the target again
-        // and start creating the finer window again... and on movement change..
-        // do all this RAF stuff again.
-        if (this.positionRAF) {
-          cancelAnimationFrame(this.positionRAF);
-        }
-        this.observe(this.target);
-      }
-    } else {
-      // just for safety purpose.. in case there is no target
-      if (this.positionRAF) {
-        cancelAnimationFrame(this.positionRAF);
-      }
-    }
-  }
-
   private stopConfirmationCheck() {
-    // One more RAF to detect if the target has finally stopped or not.
-    // Works similar to the other RAF method.
+    // RAF to detect if the target has finally stopped or not.
     console.log("RAF 2 called");
     if (this.target) {
       const targetRect = this.target.getBoundingClientRect();
@@ -212,10 +170,10 @@ export class PositionObserver {
           // This means the target has started moving from the finer window (but not completely out of it also)
           this.intersectionObserver?.unobserve(target);
           this.intersectionObserver?.disconnect();
-          this.timeToWaitTillStopConfirmed = Math.ceil(this.waitTime / 16);
+          this.timeToWaitTillStopConfirmed = Math.ceil(this.waitTime / 16); // assuming 1 animation-frame takes 16ms.
           this.stopped = false;
           this.positionRAF = requestAnimationFrame(
-            this.repeatedCheck.bind(this)
+            this.stopConfirmationCheck.bind(this)
           );
         }
       }
@@ -228,25 +186,7 @@ export class PositionObserver {
         this.intersectionObserver?.disconnect();
         this.observe(target);
       }
-      if (entry.intersectionRatio === 1) {
-        // if it is completely within the finer window... wait for some more time
-        // using the RAF to completely decide if the movement has stopped or not.
-        if (!this.stopped) {
-          this.timeToWaitTillStopConfirmed = Math.ceil(this.stopWaitTime / 16);
-          this.positionRAF = requestAnimationFrame(
-            this.stopConfirmationCheck.bind(this)
-          );
-        }
-      }
     });
-    // if intersectionRatio is 0, then it means
-    // the target is fully out of the finer window.
-    // In that case, we pass this to the viewport
-    // detector callback (whether it is inside the
-    // viewport or not).
-    // And it stays there in that callback until
-    // the viewport detector callback says, yah, we found it..
-    // when it comes back to this callback with an updated finer window
   }
 
   public disconnect() {
