@@ -36,20 +36,37 @@
       }
       h1 {
         text-align: center;
-        color: wheat;
+        color: rgba(16, 195, 201, 0.516);
         padding: 1rem 1rem;
         margin: 0;
-        display: grid;
-        place-items: center;
-        font-weight: 600;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-          sans-serif;
+        font-size: 56px;
+        font-family: Georgia, "Times New Roman", Times, serif;
+        text-transform: uppercase;
+        text-shadow: 0px 1px rgb(0, 0, 0, 0.4);
+        letter-spacing: 0px;
+        color: transparent;
+        background: linear-gradient(to top, silver, wheat, silver);
+        background-clip: text;
+        font-weight: 100;
       }
-      .github {
-        color: white;
+      h1 > * {
+        margin: 0;
+      }
+      .github.glass {
+        padding: 10px 20px;
+        color: #fff;
         font-weight: 600;
-        text-shadow: 0 0 1px 0 red;
+        text-decoration: none;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        transition: 0.3s;
+      }
+
+      .github.glass:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
       }
       footer {
         padding: 1rem 1rem;
@@ -84,6 +101,7 @@
         font-size: 0.75rem;
         text-align: center;
         color: whitesmoke;
+        position: relative;
       }
       iframe {
         height: 100%;
@@ -92,57 +110,115 @@
       }
       .logo {
         color: rgba(16, 195, 201, 0.516);
-        padding: 0rem 0.25rem;
+        padding: 0rem 1rem;
         font-family: Georgia, "Times New Roman", Times, serif;
-        font-weight: 100;
-        letter-spacing: 2px;
-        font-size: 8px;
         width: fit-content;
+        text-transform: uppercase;
+        text-shadow: 0px 1px rgb(0, 0, 0, 0.4);
+        color: transparent;
+        background: linear-gradient(to top, silver, wheat, silver);
+        background-clip: text;
+        font-weight: 100;
+        font-size: 16px;
       }
       .logo-2 {
         color: transparent;
         visibility: hidden;
         z-index: -1;
         pointer-events: none;
-        padding: 0rem 0.25rem;
+        padding: 0rem 1rem;
         font-family: Georgia, "Times New Roman", Times, serif;
         font-weight: 100;
         letter-spacing: 2px;
         font-size: 8px;
         width: fit-content;
       }
+      .full-page-link {
+        position: absolute;
+        right: 0.5rem;
+        top: -0.5rem;
+        text-decoration: none;
+        color: #d5d7db;
+        width: 30px;
+        height: 30px;
+        border: 2px dashed #839ea6;
+        display: flex;
+        justify-content: right;
+        align-items: flex-end;
+        font-size: 30px;
+        border-radius: 2px;
+        font-weight: 900;
+        box-sizing: border-box;
+      }
+      .smaller {
+        font-size: smaller;
+      }
     </style>
   </head>
   <body>
     <header>
       <span class="logo">AJK-ESSENTIAL</span>
-      <h1>Position Observer Demo</h1>
+      <h1>Position<br />Observer</h1>
       <span class="logo-2">AJK-ESSENTIAL</span>
     </header>
     <main>
       <div class="card">
-        <div class="header">Scenario 1</div>
+        <div class="header">
+          Scenario 1
+          <a
+            href="./target-random-position.html"
+            title="Visit full page"
+            target="_blank"
+            ><span class="full-page-link">↗</span></a
+          >
+        </div>
         When the target moves randomly
         <iframe src="./target-random-position.html"></iframe>
       </div>
       <div class="card">
-        <div class="header">Scenario 2</div>
+        <div class="header">
+          Scenario 2
+          <a href="./target-scroll.html" title="Visit full page" target="_blank"
+            ><span class="full-page-link">↗</span></a
+          >
+        </div>
         When the target moves through scroll
         <iframe src="./target-scroll.html"></iframe>
       </div>
       <div class="card">
-        <div class="header">Scenario 3</div>
+        <div class="header">
+          Scenario 3
+          <a href="./pane-resize.html" title="Visit full page" target="_blank"
+            ><span class="full-page-link">↗</span></a
+          >
+        </div>
         When the target moves due to some other factors like a pane-resize
         <iframe src="./pane-resize.html"></iframe>
       </div>
     </main>
-    <footer>
+    <footer style="display: flex; justify-content: center; align-items: center">
       <a
-        class="github"
+        style="
+          position: relative;
+          width: fit-content;
+          display: flex;
+          justify-content: space-between;
+          flex-direction: row;
+          text-align: left;
+          top: auto;
+          gap: 1rem;
+          align-items: center;
+        "
+        class="github glass"
         href="https://github.com/AJK-Essential/Position-Observer"
         target="_blank"
       >
         Visit Github Repo
+        <span
+          class="full-page-link"
+          style="position: relative; top: unset; right: unset"
+          >↗</span
+        >
       </a>
     </footer>
   </body>

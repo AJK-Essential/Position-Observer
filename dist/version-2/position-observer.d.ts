@@ -21,7 +21,6 @@ export declare class PositionObserver {
     private timeToWaitTillStopConfirmed;
     private waitTime;
     private stopWaitTime;
-    private stopped;
     constructor(positionObserverCallback: positionObserverCallback, thresholdFraction?: number);
     observe(targetElement: HTMLElement | Element): void;
     private viewportWindowDetectionCallback;

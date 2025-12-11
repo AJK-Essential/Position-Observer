@@ -28,8 +28,7 @@ export class PositionObserver {
   private target?: HTMLElement | Element;
   private timeToWaitTillStopConfirmed = 0;
   private waitTime = 0;
-  private stopWaitTime = 2 * 1000; // 2 times 1000ms = 2s
-  private stopped = false;
+  private stopWaitTime = 0.5 * 1000; // 0.5 times 1000ms = 0.5s
   constructor(
     positionObserverCallback: positionObserverCallback,
     thresholdFraction = 1000
@@ -58,8 +57,9 @@ export class PositionObserver {
     const entry = e[0];
     const target = entry.target;
     const targetBounds = entry.boundingClientRect;
-    // if ever it slightly is within this.viewportWindowDetectionCallback, we immediately Pass to the finer window
-    if (entry.intersectionRatio > 0) {
+
+    // Passing to the finer window detection if the target is completely inside the viewport
+    if (entry.intersectionRatio == 1) {
       this.intersectionObserver?.unobserve(target);
       this.intersectionObserver?.disconnect();
       const options: IntersectionObserverInit = {
@@ -83,7 +83,7 @@ export class PositionObserver {
         x: targetBounds.left,
         y: targetBounds.top,
         target,
-        outOfViewport: true,
+        outOfViewport: entry.intersectionRatio === 0,
         rootBounds: entry.rootBounds,
       });
     }
@@ -136,7 +136,6 @@ export class PositionObserver {
         );
       } else {
         if (this.positionRAF) {
-          this.stopped = true;
           cancelAnimationFrame(this.positionRAF);
         }
         this.observe(this.target);
@@ -152,11 +151,10 @@ export class PositionObserver {
     console.log("target is the boundary");
     const entry = e[0];
     const target = entry.target;
-    const targetBounds = entry.boundingClientRect;
     requestAnimationFrame(() => {
-      if (this.hasPositionChanged(entry.boundingClientRect)) {
-        this.stopped = false;
-        this.updatePosition(entry.boundingClientRect);
+      const targetBounds = entry.boundingClientRect;
+      if (this.hasPositionChanged(targetBounds)) {
+        this.updatePosition(targetBounds);
         if (this.positionObserverCallback) {
           this.positionObserverCallback({
             x: targetBounds.left,
@@ -166,15 +164,26 @@ export class PositionObserver {
             rootBounds: entry.rootBounds,
           });
         }
-        if (entry.intersectionRatio > 0 && entry.intersectionRatio < 1) {
+        if (entry.intersectionRatio >= 0 && entry.intersectionRatio < 1) {
           // This means the target has started moving from the finer window (but not completely out of it also)
           this.intersectionObserver?.unobserve(target);
           this.intersectionObserver?.disconnect();
           this.timeToWaitTillStopConfirmed = Math.ceil(this.waitTime / 16); // assuming 1 animation-frame takes 16ms.
-          this.stopped = false;
           this.positionRAF = requestAnimationFrame(
             this.stopConfirmationCheck.bind(this)
           );
+        }
+      }
+      if (entry.intersectionRatio === 1) {
+        // If it is completely inside the finer window, we just report its position
+        if (this.positionObserverCallback) {
+          this.positionObserverCallback({
+            x: targetBounds.left,
+            y: targetBounds.top,
+            target,
+            outOfViewport: false,
+            rootBounds: entry.rootBounds,
+          });
         }
       }
       if (entry.intersectionRatio === 0) {
@@ -182,10 +191,21 @@ export class PositionObserver {
         // 1) out of the viewport window
         // 2) just out of the finer window but inside the viewport window.
         // In either case, we give the decision to the viewport callback
+        // This condition is necessary because sometimes due to fast movement, the target
+        // may go completely out of the finer window. Like in a flick, the target may go
+        // completely out of the finer window but still be inside the viewport window.
+        // For example, if the finer window is at bottom-right corner, and the target is flicked
+        // towards bottom-right, it may go completely out of the finer window but still be inside
+        // the viewport window. So we need to hand over the control back to the viewport callback
+        // to correctly identify if it is out of viewport or not.
+        // Hence we re-observe it with the viewport callback.
+        // This also handles the case when the target is out of viewport.
+        // In both cases, we need to re-observe with the viewport callback.
         this.intersectionObserver?.unobserve(target);
         this.intersectionObserver?.disconnect();
         this.observe(target);
       }
+      this.updatePosition(entry.boundingClientRect);
     });
   }
 

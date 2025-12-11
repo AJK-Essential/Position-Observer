@@ -7,12 +7,13 @@
     margin: 0;
     padding: 0;
     position: relative;
+    background-color: rgb(3, 27, 37);
   }
   .target {
     background-color: rgba(128, 0, 0, 0.361);
     width: 20px;
     height: 20px;
-    transition: all 0.2s ease-in-out;
+    /* transition: all 0.2s ease-in-out; */
     border-radius: 4px;
   }
   .overlay {
@@ -53,6 +54,16 @@
   .scroller::-webkit-scrollbar-corner {
     appearance: none;
   }
+  .root-bounds {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    border: 1px solid gold;
+    box-sizing: border-box;
+    pointer-events: none;
+  }
 </style>
 
 <div class="scroller" style="height: 70%; overflow: auto">
@@ -68,13 +79,19 @@
     <div class="target"></div>
   </div>
 </div>
-<div class="overlay">This overlay tracks the target</div>
+<div class="overlay">
+  This overlay tracks the maroon target.<br /><span style="font-size: smaller"
+    >The yellow border represents the capturing window</span
+  >
+</div>
+<div class="root-bounds"></div>
 <pre class="data"></pre>
 <script>
   const target = document.querySelector(".target");
   const overlay = document.querySelector(".overlay");
   const code = document.querySelector(".data");
   const scroller = document.querySelector(".scroller");
+  const rootBoundsDiv = document.querySelector(".root-bounds");
 </script>
 <script type="module">
   import { PositionObserver } from "./position-observer.js";
@@ -86,9 +103,14 @@
     overlay.style.top = data.y + target.getBoundingClientRect().height + "px";
     overlay.style.left = data.x + "px";
     code.innerHTML = `
-  Data.x              =   ${data.x};
-  Data.y              =   ${data.y};
+  Data.x              =   ${parseFloat(data.x).toFixed(2)};
+  Data.y              =   ${parseFloat(data.y).toFixed(2)};
   Data.outOfViewport  =   ${data.outOfViewport}`;
+    rootBoundsDiv.style.top = data.rootBounds.top + "px";
+    rootBoundsDiv.style.left = data.rootBounds.left + "px";
+    rootBoundsDiv.style.width = data.rootBounds.width + "px";
+    rootBoundsDiv.style.height = data.rootBounds.height + "px";
+    console.log("posObsCallback called");
   }
 
   scroller.scrollTop = 353;

@@ -7,7 +7,7 @@
     margin: 0;
     padding: 0;
     position: relative;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgb(3, 27, 37);
   }
   .target {
     background-color: rgba(128, 0, 0, 0.361);
@@ -55,21 +55,54 @@
     bottom: 0%;
     right: 0%;
   }
+  .spacer {
+    height: 50px;
+    width: 100%;
+  }
+  .root-bounds {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    border: 1px solid gold;
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+  .data > pre {
+    margin: 0px;
+  }
+  .swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: var(--color, transparent);
+  }
+  .smaller {
+    font-size: smaller;
+  }
 </style>
 <main>
   <aside></aside>
   <div class="target"></div>
 </main>
 
-<div class="overlay">This overlay tracks the target</div>
-<input type="range" min="50" max="200" class="range" value="125" />
+<div class="overlay">
+  This overlay tracks the maroon target.<br /><span style="font-size: smaller"
+    >The yellow border represents the capturing window</span
+  >
+</div>
 <pre class="data"></pre>
+<div class="spacer"></div>
+<input type="range" min="50" max="200" class="range" value="125" />
+<div class="root-bounds"></div>
 <script>
   const target = document.querySelector(".target");
   const overlay = document.querySelector(".overlay");
   const code = document.querySelector(".data");
   const pane = document.querySelector("aside");
   const range = document.querySelector(".range");
+  const rootBoundsDiv = document.querySelector(".root-bounds");
 </script>
 <script type="module">
   import { PositionObserver } from "./position-observer.js";
@@ -81,9 +114,14 @@
     overlay.style.top = data.y + target.getBoundingClientRect().height + "px";
     overlay.style.left = data.x + "px";
     code.innerHTML = `
-    Data.x              =   ${data.x};
-    Data.y              =   ${data.y};
-    Data.outOfViewport  =   ${data.outOfViewport}`;
+    Data.x              =   ${parseFloat(data.x).toFixed(2)};
+    Data.y              =   ${parseFloat(data.y).toFixed(2)};
+    Data.outOfViewport  =   ${data.outOfViewport};`;
+    rootBoundsDiv.style.top = data.rootBounds.top + "px";
+    rootBoundsDiv.style.left = data.rootBounds.left + "px";
+    rootBoundsDiv.style.width = data.rootBounds.width + "px";
+    rootBoundsDiv.style.height = data.rootBounds.height + "px";
+    console.log("posObsCallback called");
   }
   range.oninput = () => {
     pane.style.width = range.value + "px";
