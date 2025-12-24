@@ -1,7 +1,18 @@
 <link rel="stylesheet" href="./iframe.css" />
 <body>
   <main>
-    <div class="scroller" style="height: 70%; overflow: auto">
+    <div
+      class="scroller"
+      style="
+        height: 70%;
+        overflow: auto;
+        position: relative;
+        top: 2rem;
+        left: 2rem;
+        width: calc(100% - 4rem);
+        outline: 1px solid var(--border);
+      "
+    >
       <div
         style="
           height: 800px;
@@ -16,12 +27,12 @@
     </div>
   </main>
   <div class="overlay">
-    <code>This overlay tracks the maroon target</code>
+    <code>This overlay tracks the round target</code>
   </div>
   <div class="root-bounds"></div>
   <footer>
     <code></code>
-    <div>
+    <div style="padding: 0.25rem">
       <!--Uncomment the below code to see the root-bounds
       Warning, the root-bounds change quickly
       -->

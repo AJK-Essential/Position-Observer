@@ -91,13 +91,16 @@ footer {
   transition: all 0.2s ease-in-out;
 }
 footer {
-  font-family: math;
   color: var(--headline);
   font-weight: 500;
-  font-size: 15px;
+  font-size: 0.85rem;
+  font-family: sans-serif;
 }
 footer code {
   border-bottom: 1px solid var(--border);
   width: 100%;
   display: block;
+  padding: 0.25rem;
+  font-family: sans-serif;
+  font-size: 0.85rem;
 }

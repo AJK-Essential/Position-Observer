@@ -163,3 +163,7 @@ footer {
   margin-top: 0.5rem;
   opacity: 0.75;
 }
+
+html {
+  filter: saturate(0.3) hue-rotate(45deg) grayscale(0.2) contrast(0.8) invert(1);
+}

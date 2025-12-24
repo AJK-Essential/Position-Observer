@@ -14,7 +14,7 @@
   <div class="root-bounds"></div>
   <footer>
     <code></code>
-    <div>
+    <div style="padding: 0.25rem">
       <input type="range" class="range" />
       <br />
       <!--Uncomment the below code to see the root-bounds
@@ -57,7 +57,7 @@
       overlay.style.top = data.y + targetBounds.height + "px";
       overlay.style.left = data.x + "px";
 
-      code.innerText = `Data.x\t:\t${data.x}\nData.y\t:\t${data.y}\nData.outOfViewport\t:\t${data.outOfViewport}`;
+      code.innerText = `Data.x\t\t\t\t\t:\t${data.x}\nData.y\t:\t${data.y}\nData.outOfViewport\t:\t${data.outOfViewport}`;
 
       rootBoundsDiv.style.left = data.rootBounds.left + "px";
       rootBoundsDiv.style.top = data.rootBounds.top + "px";
