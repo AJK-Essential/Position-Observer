@@ -240,4 +240,3 @@ export class PositionObserver {
         return `${constrainedTopMarginOfWindow}px ${constrainedRightMarginOfWindow}px ${constrainedBottomMarginOfWindow}px ${constrainedLeftMarginOfWindow}px`;
     }
 }
-//# sourceMappingURL=position-observer.js.map

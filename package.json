@@ -5,9 +5,9 @@
   "main": "./dist/position-observer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --watch",
-    "demo:version-1": "web-dev-server --root-dir ./docs --node-resolve --watch --open ",
-    "demo:version-2": "web-dev-server --root-dir ./docs/version-2 --node-resolve --watch --open "
+    "watch-and-compile-typescript": "tsc --watch",
+    "watch-and-copy-demo-files": "node --watch-path=./demo-files copy-and-create-code-files.js",
+    "view-demo": "web-dev-server --root-dir ./docs --node-resolve --watch --open "
   },
   "repository": {
     "type": "git",

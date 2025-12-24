@@ -1,0 +1,130 @@
+<link rel="stylesheet" href="./iframe.css" />
+<style></style>
+<body>
+  <main>
+    <div class="target"></div>
+  </main>
+  <div class="overlay">
+    <code>This overlay tracks the maroon target</code>
+  </div>
+  <div class="root-bounds"></div>
+  <footer>
+    <code></code>
+    <div>
+      <label for="see-transition-for-target-confirmation-checkbox"
+        >See Transition ?</label
+      >
+      <input
+        type="checkbox"
+        class="transition-checkbox"
+        id="see-transition-for-target-confirmation-checkbox"
+      />
+      <br />
+      <!--Uncomment the below code to see the root-bounds
+        Warning, the root-bounds change quickly
+        -->
+      <label for="see-rootbounds">See RootBounds (Trigger Warning)</label>
+      <input type="checkbox" class="root-bounds-checkbox" id="see-rootbounds" />
+    </div>
+  </footer>
+
+  <script type="module">
+    let target,
+      overlay,
+      code,
+      rootBoundsDiv,
+      targetBounds,
+      transitionCheckbox,
+      rootBoundsSee;
+
+    target = document.querySelector(".target");
+    overlay = document.querySelector(".overlay");
+    code = document.querySelector("footer code");
+    rootBoundsDiv = document.querySelector(".root-bounds");
+
+    rootBoundsSee = false;
+
+    import { PositionObserver } from "./position-observer.js";
+
+    const positionObserver = new PositionObserver(posObsCallback);
+    positionObserver.observe(target);
+
+    targetBounds = target.getBoundingClientRect();
+
+    // Either the below callback or the event listener is called in these examples.
+    function posObsCallback(data) {
+      overlay.style.top = data.y + targetBounds.height + "px";
+      overlay.style.left = data.x + "px";
+
+      code.innerText = `Data.x\t:\t${data.x}\nData.y\t:\t${data.y}\nData.outOfViewport\t:\t${data.outOfViewport}`;
+
+      rootBoundsDiv.style.left = data.rootBounds.left + "px";
+      rootBoundsDiv.style.top = data.rootBounds.top + "px";
+      rootBoundsDiv.style.height = data.rootBounds.height + "px";
+      rootBoundsDiv.style.width = data.rootBounds.width + "px";
+    }
+
+    target.addEventListener(
+      "movement-observed",
+      (e) => {
+        targetBounds = target.getBoundingClientRect();
+        overlay.style.top = targetBounds.top + targetBounds.height + "px";
+        overlay.style.left = targetBounds.left + "px";
+
+        code.innerText = `Data.x\t:\t${targetBounds.x}\nData.y\t:\t${targetBounds.y}\nData.outOfViewport\t:\t${e.detail.outOfViewport}`;
+
+        rootBoundsDiv.style.left = e.detail.rootBounds.left + "px";
+        rootBoundsDiv.style.top = e.detail.rootBounds.top + "px";
+        rootBoundsDiv.style.height = e.detail.rootBounds.height + "px";
+        rootBoundsDiv.style.width = e.detail.rootBounds.width + "px";
+      },
+      { passive: true }
+    );
+
+    transitionCheckbox = document.querySelector(".transition-checkbox");
+    transitionCheckbox.addEventListener("change", function () {
+      // Check the 'checked' property to see if the box is currently checked
+      if (transitionCheckbox.checked) {
+        target.classList.add("transition");
+      } else {
+        target.classList.remove("transition");
+      }
+    });
+
+    let rootBoundsCheckbox = document.querySelector(".root-bounds-checkbox");
+    rootBoundsCheckbox.addEventListener("change", function () {
+      // Check the 'checked' property to see if the box is currently checked
+      rootBoundsSee = rootBoundsCheckbox.checked;
+      rootBoundsDiv.style.display = rootBoundsCheckbox.checked
+        ? "block"
+        : "none";
+    });
+
+    let randomiseTimeout;
+    const randomiseTargetLocation = () => {
+      clearTimeout(randomiseTargetLocation);
+      target.style.left = `${
+        Math.random() *
+          (window.visualViewport.offsetLeft +
+            window.visualViewport.width +
+            100 -
+            window.visualViewport.offsetLeft -
+            100) +
+        window.visualViewport.offsetLeft -
+        100
+      }px`;
+      target.style.top = `${
+        Math.random() *
+          (window.visualViewport.offsetTop +
+            window.visualViewport.height +
+            100 -
+            window.visualViewport.offsetTop -
+            100) +
+        window.visualViewport.offsetTop -
+        100
+      }px`;
+      randomiseTimeout = setTimeout(randomiseTargetLocation, 5000);
+    };
+    randomiseTimeout = setTimeout(randomiseTargetLocation, 5000);
+  </script>
+</body>
