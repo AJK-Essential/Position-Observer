@@ -3,7 +3,7 @@
   --text-main: #1f1f1f;
   --text-muted: #555555;
   --headline: #2a2a2a;
-  --accent: #8b1e1e;
+  --accent: #b10000;
   --border: #d6d1c8;
   --highlight: #ece7df;
 }
@@ -19,6 +19,7 @@ body {
   font-family: "Georgia", "Times New Roman", serif;
   font-size: 1rem;
   line-height: 1.65;
+  transition: filter 2s ease-in-out;
 }
 body {
   background: var(--bg-paper);
@@ -43,7 +44,7 @@ h1 {
   letter-spacing: 0px;
   background-clip: text;
   font-weight: 100;
-  color: var(--headline);
+  color: var(--accent);
 }
 h1 > * {
   margin: 0;
